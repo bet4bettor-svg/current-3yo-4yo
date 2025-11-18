@@ -8,7 +8,7 @@ const Current3yo4yo = () => {
     spsAvg: 2.30,
     slAvg: 7.5
   });
-  const [customData, setCustomData] = useState(null);
+  const [customData] = useState(null);
 
   const data = customData || defaultData;
   const data3yo = useMemo(() => data.filter(h => h.age === 3), [data]);
@@ -77,8 +77,10 @@ const Current3yo4yo = () => {
     return { spsAvgCorr, slAvgCorr, coefficients, rSquared, n };
   };
 
-  const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
-  const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #f0f4f8, #e8f5e9)', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
