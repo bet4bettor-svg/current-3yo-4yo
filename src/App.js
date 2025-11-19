@@ -164,18 +164,18 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
             <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'Work Sans, sans-serif' }}>Predict Current Optimal Distance</h2>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50' }}>Age</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Age</label>
                 <select 
                   value={predictInputs.age} 
                   onChange={(e) => setPredictInputs({...predictInputs, age: parseInt(e.target.value)})} 
-                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', height: '38px' }}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px'}}
                 >
                   <option value={3}>3yo</option>
                   <option value={4}>4+yo</option>
                 </select>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50' }}>Average SPS (Hz)</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Average SPS (Hz)</label>
                 <input 
                   type="number" 
                   step="0.01" 
@@ -185,7 +185,7 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50' }}>Average SL metres</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Average SL metres</label>
                 <input 
                   type="number" 
                   step="0.01" 
