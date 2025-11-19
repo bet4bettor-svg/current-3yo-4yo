@@ -129,7 +129,7 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
         {view === 'model-stats' && (
           <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center', fontFamily: 'Work Sans, sans-serif' }}>Current Performance Models</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
               <div style={{ padding: '16px', borderRadius: '8px', border: '2px solid #3498DB', background: '#E3F2FD' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>3-Year-Olds</h3>
                 {stats3yo ? (
@@ -168,7 +168,7 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
                 <select 
                   value={predictInputs.age} 
                   onChange={(e) => setPredictInputs({...predictInputs, age: parseInt(e.target.value)})} 
-                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', height: '38px' }}
                 >
                   <option value={3}>3yo</option>
                   <option value={4}>4+yo</option>
