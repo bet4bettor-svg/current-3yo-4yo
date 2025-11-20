@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { defaultData } from './data/trainingData';
 
 const Current3yo4yo = () => {
-  const [view, setView] = useState('model-stats');
+  const [view, setView] = useState('predict');
   const [predictInputs, setPredictInputs] = useState({
     age: 3,
     spsAvg: 2.30,
@@ -97,20 +97,6 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
         <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '16px', marginBottom: '24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <button 
-              onClick={() => setView('model-stats')} 
-              style={{
-                padding: '16px',
-                borderRadius: '8px',
-                border: view === 'model-stats' ? '2px solid #3498DB' : '2px solid #ddd',
-                background: view === 'model-stats' ? '#E3F2FD' : '#f9f9f9',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>📊 3yo & 4+yo Model Stats</div>
-            </button>
-            
-            <button 
               onClick={() => setView('predict')} 
               style={{
                 padding: '16px',
@@ -122,6 +108,20 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
               }}
             >
               <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>🎯 Predict Current 3yo & 4+yo Optimal Distance</div>
+            </button>
+            
+            <button 
+              onClick={() => setView('model-stats')} 
+              style={{
+                padding: '16px',
+                borderRadius: '8px',
+                border: view === 'model-stats' ? '2px solid #3498DB' : '2px solid #ddd',
+                background: view === 'model-stats' ? '#E3F2FD' : '#f9f9f9',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>📊 3yo & 4+yo Model Stats</div>
             </button>
           </div>
         </div>
