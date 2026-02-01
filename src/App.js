@@ -83,7 +83,7 @@ const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
 const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #f0f4f8, #e8f5e9)', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', padding: '32px', marginBottom: '24px' }}>
           <h1 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px', color: '#2C3E50', fontFamily: 'Work Sans, sans-serif' }}>
@@ -99,29 +99,35 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
             <button 
               onClick={() => setView('predict')} 
               style={{
-                padding: '16px',
+                padding: '12px 24px',
                 borderRadius: '8px',
-                border: view === 'predict' ? '2px solid #27AE60' : '2px solid #ddd',
-                background: view === 'predict' ? '#E8F8F5' : '#f9f9f9',
+                border: view === 'predict' ? 'none' : '2px solid #e5e7eb',
+                background: view === 'predict' ? '#2C3E50' : 'white',
+                color: view === 'predict' ? 'white' : '#6b7280',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                fontWeight: '600',
+                fontSize: '16px'
               }}
             >
-              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>🎯 Predict Current 3yo & 4+yo Optimal Distance</div>
+              🎯 Predict Distance
             </button>
             
             <button 
               onClick={() => setView('model-stats')} 
               style={{
-                padding: '16px',
+                padding: '12px 24px',
                 borderRadius: '8px',
-                border: view === 'model-stats' ? '2px solid #3498DB' : '2px solid #ddd',
-                background: view === 'model-stats' ? '#E3F2FD' : '#f9f9f9',
+                border: view === 'model-stats' ? 'none' : '2px solid #e5e7eb',
+                background: view === 'model-stats' ? '#2C3E50' : 'white',
+                color: view === 'model-stats' ? 'white' : '#6b7280',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                fontWeight: '600',
+                fontSize: '16px'
               }}
             >
-              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#2C3E50' }}>📊 3yo & 4+yo Model Stats</div>
+              📊 Model Stats
             </button>
           </div>
         </div>
@@ -130,11 +136,11 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
           <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center', fontFamily: 'Work Sans, sans-serif' }}>Current Performance Models</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
-              <div style={{ padding: '16px', borderRadius: '8px', border: '2px solid #3498DB', background: '#E3F2FD' }}>
+              <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>3-Year-Olds</h3>
                 {stats3yo ? (
                   <>
-                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#3498DB' }}>{(stats3yo.rSquared * 100).toFixed(1)}%</div>
+                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats3yo.rSquared * 100).toFixed(1)}%</div>
                     <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
                     <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats3yo.n} horses</p>
                   </>
@@ -143,11 +149,11 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
                 )}
               </div>
 
-              <div style={{ padding: '16px', borderRadius: '8px', border: '2px solid #27AE60', background: '#E8F8F5' }}>
+              <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>4+ Year-Olds</h3>
                 {stats4plus ? (
                   <>
-                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#27AE60' }}>{(stats4plus.rSquared * 100).toFixed(1)}%</div>
+                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats4plus.rSquared * 100).toFixed(1)}%</div>
                     <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
                     <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats4plus.n} horses</p>
                   </>
@@ -203,10 +209,12 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
               const prediction = currentStats.coefficients[0] + currentStats.coefficients[1] * predictInputs.spsAvg + currentStats.coefficients[2] * predictInputs.slAvg;
 
               return (
-                <div style={{ background: 'linear-gradient(to right, #E3F2FD, #E8F8F5)', padding: '24px', borderRadius: '8px', textAlign: 'center', border: '2px solid #3498DB' }}>
-                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>PREDICTED DISTANCE</p>
-                  <p style={{ fontSize: '48px', fontWeight: 'bold', color: '#3498DB', marginBottom: '4px' }}>{prediction.toFixed(1)}f</p>
-                  <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>R²: {(currentStats.rSquared * 100).toFixed(1)}% • Sample Size: {currentStats.n} horses</p>
+                <div style={{ background: '#e0f2fe', border: '3px solid #0ea5e9', borderRadius: '12px', padding: '32px', textAlign: 'center', marginTop: '16px' }}>
+                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px', letterSpacing: '1px' }}>PREDICTED DISTANCE</p>
+                  <p style={{ fontSize: '72px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '8px', lineHeight: '1' }}>{prediction.toFixed(1)}f</p>
+                  <p style={{ fontSize: '13px', color: '#64748b' }}>
+                    {predictInputs.age === 3 ? '3-Year-Old' : '4+ Years'} • R²: {(currentStats.rSquared * 100).toFixed(1)}% • n={currentStats.n}
+                  </p>
                 </div>
               );
             })()}
