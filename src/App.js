@@ -17,70 +17,84 @@ const Current3yo4yo = () => {
   const calculateModelStats = (dataset) => {
     const n = dataset.length;
     if (n < 10) return null;
-    
-    const correlation = (x, y) => {
-      const meanX = x.reduce((a, b) => a + b) / n;
-      const meanY = y.reduce((a, b) => a + b) / n;
-      const num = x.reduce((sum, xi, i) => sum + (xi - meanX) * (y[i] - meanY), 0);
-      const denX = Math.sqrt(x.reduce((sum, xi) => sum + Math.pow(xi - meanX, 2), 0));
-      const denY = Math.sqrt(y.reduce((sum, yi) => sum + Math.pow(yi - meanY, 2), 0));
-      return num / (denX * denY);
-    };
 
     const distances = dataset.map(d => d.distance);
-    const spsAvgCorr = correlation(dataset.map(d => d.spsAvg), distances);
-    const slAvgCorr = correlation(dataset.map(d => d.slAvg), distances);
+    const spsVals   = dataset.map(d => d.spsAvg);
+    const slVals    = dataset.map(d => d.slAvg);
 
-    const X = dataset.map(d => [1, d.spsAvg, d.slAvg]);
+    // Correlation helpers (used for internal model diagnostics)
+    const meanFn = arr => arr.reduce((a, b) => a + b, 0) / n;
+    const correlation = (x, y) => {
+      const mX = meanFn(x), mY = meanFn(y);
+      const num = x.reduce((s, xi, i) => s + (xi - mX) * (y[i] - mY), 0);
+      const dX  = Math.sqrt(x.reduce((s, xi) => s + Math.pow(xi - mX, 2), 0));
+      const dY  = Math.sqrt(y.reduce((s, yi) => s + Math.pow(yi - mY, 2), 0));
+      return num / (dX * dY);
+    };
+    const spsAvgCorr = correlation(spsVals, distances);
+    const slAvgCorr  = correlation(slVals,  distances);
+
+    // Build X matrix with polynomial term: [1, SPS, SL, SPS²]
+    const X = dataset.map(d => [1, d.spsAvg, d.slAvg, d.spsAvg * d.spsAvg]);
     const y = distances;
-    
-    const XtX = [
-      [n, X.reduce((s, row) => s + row[1], 0), X.reduce((s, row) => s + row[2], 0)],
-      [X.reduce((s, row) => s + row[1], 0), X.reduce((s, row) => s + row[1] * row[1], 0), X.reduce((s, row) => s + row[1] * row[2], 0)],
-      [X.reduce((s, row) => s + row[2], 0), X.reduce((s, row) => s + row[1] * row[2], 0), X.reduce((s, row) => s + row[2] * row[2], 0)]
-    ];
-    
-    const Xty = [
-      y.reduce((s, yi) => s + yi, 0),
-      X.reduce((s, row, i) => s + row[1] * y[i], 0),
-      X.reduce((s, row, i) => s + row[2] * y[i], 0)
-    ];
+    const k = 4;
 
-    const det = XtX[0][0] * (XtX[1][1] * XtX[2][2] - XtX[1][2] * XtX[2][1]) -
-                XtX[0][1] * (XtX[1][0] * XtX[2][2] - XtX[1][2] * XtX[2][0]) +
-                XtX[0][2] * (XtX[1][0] * XtX[2][1] - XtX[1][1] * XtX[2][0]);
+    // XtX (4×4 matrix)
+    const XtX = Array.from({ length: k }, (_, i) =>
+      Array.from({ length: k }, (_, j) =>
+        X.reduce((s, row) => s + row[i] * row[j], 0)
+      )
+    );
 
-    const inv = [
-      [(XtX[1][1] * XtX[2][2] - XtX[1][2] * XtX[2][1]) / det,
-       -(XtX[0][1] * XtX[2][2] - XtX[0][2] * XtX[2][1]) / det,
-       (XtX[0][1] * XtX[1][2] - XtX[0][2] * XtX[1][1]) / det],
-      [-(XtX[1][0] * XtX[2][2] - XtX[1][2] * XtX[2][0]) / det,
-       (XtX[0][0] * XtX[2][2] - XtX[0][2] * XtX[2][0]) / det,
-       -(XtX[0][0] * XtX[1][2] - XtX[0][2] * XtX[1][0]) / det],
-      [(XtX[1][0] * XtX[2][1] - XtX[1][1] * XtX[2][0]) / det,
-       -(XtX[0][0] * XtX[2][1] - XtX[0][1] * XtX[2][0]) / det,
-       (XtX[0][0] * XtX[1][1] - XtX[0][1] * XtX[1][0]) / det]
-    ];
+    // Xty (4×1 vector)
+    const Xty = Array.from({ length: k }, (_, i) =>
+      X.reduce((s, row, r) => s + row[i] * y[r], 0)
+    );
 
-    const coefficients = [
-      inv[0][0] * Xty[0] + inv[0][1] * Xty[1] + inv[0][2] * Xty[2],
-      inv[1][0] * Xty[0] + inv[1][1] * Xty[1] + inv[1][2] * Xty[2],
-      inv[2][0] * Xty[0] + inv[2][1] * Xty[1] + inv[2][2] * Xty[2]
-    ];
+    // Invert XtX using Gaussian elimination
+    const invertMatrix = (M) => {
+      const sz = M.length;
+      const aug = M.map((row, i) => [
+        ...row,
+        ...Array.from({ length: sz }, (_, j) => (i === j ? 1 : 0))
+      ]);
+      for (let col = 0; col < sz; col++) {
+        const pivot = aug[col][col];
+        if (Math.abs(pivot) < 1e-12) return null;
+        for (let c = 0; c < sz * 2; c++) aug[col][c] /= pivot;
+        for (let row = 0; row < sz; row++) {
+          if (row === col) continue;
+          const factor = aug[row][col];
+          for (let c = 0; c < sz * 2; c++) aug[row][c] -= factor * aug[col][c];
+        }
+      }
+      return aug.map(row => row.slice(sz));
+    };
 
-    const predictions = X.map(row => coefficients[0] + coefficients[1] * row[1] + coefficients[2] * row[2]);
-    const meanY = y.reduce((a, b) => a + b) / n;
-    const ssRes = y.reduce((sum, yi, i) => sum + Math.pow(yi - predictions[i], 2), 0);
-    const ssTot = y.reduce((sum, yi) => sum + Math.pow(yi - meanY, 2), 0);
+    const XtXinv = invertMatrix(XtX);
+    if (!XtXinv) return null;
+
+    // Coefficients: β = (XtX)⁻¹ · Xty
+    const coefficients = Array.from({ length: k }, (_, i) =>
+      XtXinv[i].reduce((s, val, j) => s + val * Xty[j], 0)
+    );
+
+    // Predictions and R²
+    const predictions = X.map(row =>
+      row.reduce((s, val, i) => s + val * coefficients[i], 0)
+    );
+    const meanY  = meanFn(y);
+    const ssRes  = y.reduce((s, yi, i) => s + Math.pow(yi - predictions[i], 2), 0);
+    const ssTot  = y.reduce((s, yi)    => s + Math.pow(yi - meanY, 2), 0);
     const rSquared = 1 - (ssRes / ssTot);
 
     return { spsAvgCorr, slAvgCorr, coefficients, rSquared, n };
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
+  const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
@@ -96,8 +110,8 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
 
         <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '16px', marginBottom: '24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <button 
-              onClick={() => setView('predict')} 
+            <button
+              onClick={() => setView('predict')}
               style={{
                 padding: '12px 24px',
                 borderRadius: '8px',
@@ -112,9 +126,9 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
             >
               🎯 Predict Distance
             </button>
-            
-            <button 
-              onClick={() => setView('model-stats')} 
+
+            <button
+              onClick={() => setView('model-stats')}
               style={{
                 padding: '12px 24px',
                 borderRadius: '8px',
@@ -171,10 +185,10 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Age</label>
-                <select 
-                  value={predictInputs.age} 
-                  onChange={(e) => setPredictInputs({...predictInputs, age: parseInt(e.target.value)})} 
-                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px'}}
+                <select
+                  value={predictInputs.age}
+                  onChange={(e) => setPredictInputs({...predictInputs, age: parseInt(e.target.value)})}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
                 >
                   <option value={3}>3yo</option>
                   <option value={4}>4+yo</option>
@@ -182,21 +196,21 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Average SPS (Hz)</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  value={predictInputs.spsAvg} 
-                  onChange={(e) => setPredictInputs({...predictInputs, spsAvg: parseFloat(e.target.value)})} 
+                <input
+                  type="number"
+                  step="0.01"
+                  value={predictInputs.spsAvg}
+                  onChange={(e) => setPredictInputs({...predictInputs, spsAvg: parseFloat(e.target.value)})}
                   style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
                 />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Average SL metres</label>
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  value={predictInputs.slAvg} 
-                  onChange={(e) => setPredictInputs({...predictInputs, slAvg: parseFloat(e.target.value)})} 
+                <input
+                  type="number"
+                  step="0.01"
+                  value={predictInputs.slAvg}
+                  onChange={(e) => setPredictInputs({...predictInputs, slAvg: parseFloat(e.target.value)})}
                   style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
                 />
               </div>
@@ -206,7 +220,12 @@ const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
               const currentStats = predictInputs.age === 3 ? stats3yo : stats4plus;
               if (!currentStats) return <p style={{ textAlign: 'center', color: '#999', fontSize: '14px' }}>Not enough data</p>;
 
-              const prediction = currentStats.coefficients[0] + currentStats.coefficients[1] * predictInputs.spsAvg + currentStats.coefficients[2] * predictInputs.slAvg;
+              // Polynomial model: intercept + b1*SPS + b2*SL + b3*SPS²
+              const prediction =
+                currentStats.coefficients[0] +
+                currentStats.coefficients[1] * predictInputs.spsAvg +
+                currentStats.coefficients[2] * predictInputs.slAvg +
+                currentStats.coefficients[3] * predictInputs.spsAvg * predictInputs.spsAvg;
 
               return (
                 <div style={{ background: '#e0f2fe', border: '3px solid #0ea5e9', borderRadius: '12px', padding: '32px', textAlign: 'center', marginTop: '16px' }}>
