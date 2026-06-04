@@ -1,8 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import { defaultData } from './data/trainingData';
 
+const TRACK_MODELS = {
+  Epsom:             { b0: 129.079, b1: -71.751,  b2: -3.329, b3: 13.014,  n: 195, r2: 96.23 },
+  Goodwood:          { b0: 360.529, b1: -266.752, b2: -3.344, b3: 54.024,  n: 310, r2: 82.84 },
+  York:              { b0: 224.725, b1: -143.358, b2: -3.863, b3: 26.832,  n: 463, r2: 85.29 },
+  Ascot:             { b0: 317.542, b1: -222.246, b2: -3.481, b3: 42.977,  n: 356, r2: 80.76 },
+  Pontefract:        { b0: 180.339, b1: -103.237, b2: -3.818, b3: 17.263,  n: 227, r2: 70.35 },
+  Haydock:           { b0: 275.168, b1: -185.838, b2: -4.247, b3: 36.204,  n: 299, r2: 83.34 },
+  Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
+  'Newmarket Rowley': { b0: 125.511, b1: -47.590,  b2: -5.329, b3: 6.102,   n: 217, r2: 88.09 },
+};
+
 const Current3yo4yo = () => {
   const [view, setView] = useState('predict');
+  const [track, setTrack] = useState('General');
   const [predictInputs, setPredictInputs] = useState({
     age: 3,
     spsAvg: 2.30,
@@ -22,7 +34,6 @@ const Current3yo4yo = () => {
     const spsVals   = dataset.map(d => d.spsAvg);
     const slVals    = dataset.map(d => d.slAvg);
 
-    // Correlation helpers (used for internal model diagnostics)
     const meanFn = arr => arr.reduce((a, b) => a + b, 0) / n;
     const correlation = (x, y) => {
       const mX = meanFn(x), mY = meanFn(y);
@@ -34,24 +45,20 @@ const Current3yo4yo = () => {
     const spsAvgCorr = correlation(spsVals, distances);
     const slAvgCorr  = correlation(slVals,  distances);
 
-    // Build X matrix with polynomial term: [1, SPS, SL, SPS²]
     const X = dataset.map(d => [1, d.spsAvg, d.slAvg, d.spsAvg * d.spsAvg]);
     const y = distances;
     const k = 4;
 
-    // XtX (4×4 matrix)
     const XtX = Array.from({ length: k }, (_, i) =>
       Array.from({ length: k }, (_, j) =>
         X.reduce((s, row) => s + row[i] * row[j], 0)
       )
     );
 
-    // Xty (4×1 vector)
     const Xty = Array.from({ length: k }, (_, i) =>
       X.reduce((s, row, r) => s + row[i] * y[r], 0)
     );
 
-    // Invert XtX using Gaussian elimination
     const invertMatrix = (M) => {
       const sz = M.length;
       const aug = M.map((row, i) => [
@@ -74,12 +81,10 @@ const Current3yo4yo = () => {
     const XtXinv = invertMatrix(XtX);
     if (!XtXinv) return null;
 
-    // Coefficients: β = (XtX)⁻¹ · Xty
     const coefficients = Array.from({ length: k }, (_, i) =>
       XtXinv[i].reduce((s, val, j) => s + val * Xty[j], 0)
     );
 
-    // Predictions and R²
     const predictions = X.map(row =>
       row.reduce((s, val, i) => s + val * coefficients[i], 0)
     );
@@ -95,6 +100,8 @@ const Current3yo4yo = () => {
   const stats3yo = useMemo(() => calculateModelStats(data3yo), [data3yo]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stats4plus = useMemo(() => calculateModelStats(data4plus), [data4plus]);
+
+  const isTrackModel = track !== 'General' && TRACK_MODELS[track];
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
@@ -147,48 +154,85 @@ const Current3yo4yo = () => {
         </div>
 
         {view === 'model-stats' && (
-          <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center', fontFamily: 'Work Sans, sans-serif' }}>Current Performance Models</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
-              <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>3-Year-Olds</h3>
-                {stats3yo ? (
-                  <>
-                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats3yo.rSquared * 100).toFixed(1)}%</div>
-                    <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
-                    <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats3yo.n} horses</p>
-                  </>
-                ) : (
-                  <p style={{ color: '#999', fontSize: '14px' }}>Need 10+ horses</p>
-                )}
-              </div>
+          <>
+            <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center', fontFamily: 'Work Sans, sans-serif' }}>General Models</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>3-Year-Olds</h3>
+                  {stats3yo ? (
+                    <>
+                      <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats3yo.rSquared * 100).toFixed(1)}%</div>
+                      <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
+                      <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats3yo.n} horses</p>
+                    </>
+                  ) : (
+                    <p style={{ color: '#999', fontSize: '14px' }}>Need 10+ horses</p>
+                  )}
+                </div>
 
-              <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>4+ Year-Olds</h3>
-                {stats4plus ? (
-                  <>
-                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats4plus.rSquared * 100).toFixed(1)}%</div>
-                    <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
-                    <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats4plus.n} horses</p>
-                  </>
-                ) : (
-                  <p style={{ color: '#999', fontSize: '14px' }}>Need 10+ horses</p>
-                )}
+                <div style={{ padding: '24px', borderRadius: '12px', border: '3px solid #0ea5e9', background: '#e0f2fe', textAlign: 'center' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>4+ Year-Olds</h3>
+                  {stats4plus ? (
+                    <>
+                      <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#0ea5e9' }}>{(stats4plus.rSquared * 100).toFixed(1)}%</div>
+                      <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
+                      <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {stats4plus.n} horses</p>
+                    </>
+                  ) : (
+                    <p style={{ color: '#999', fontSize: '14px' }}>Need 10+ horses</p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+
+            <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center', fontFamily: 'Work Sans, sans-serif' }}>Track-Specific Models</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                {Object.entries(TRACK_MODELS)
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([name, m]) => (
+                  <div key={name} style={{ padding: '24px', borderRadius: '12px', border: '3px solid #2C3E50', background: '#f0f4f8', textAlign: 'center' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#2C3E50', marginBottom: '8px' }}>{name}</h3>
+                    <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#2C3E50' }}>{m.r2.toFixed(1)}%</div>
+                    <p style={{ fontSize: '12px', color: '#666' }}>Model Accuracy R²</p>
+                    <p style={{ fontSize: '12px', color: '#666' }}>Sample Size: {m.n} observations</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
 
         {view === 'predict' && (
           <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: '24px' }}>
             <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'Work Sans, sans-serif' }}>Predict Current Optimal Distance</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Age</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Track</label>
+                <select
+                  value={track}
+                  onChange={(e) => setTrack(e.target.value)}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
+                >
+                  <option value="General">General</option>
+                  <option value="Ascot">Ascot</option>
+                  <option value="Epsom">Epsom</option>
+                  <option value="Goodwood">Goodwood</option>
+                  <option value="Haydock">Haydock</option>
+                  <option value="Newmarket Rowley">Newmarket Rowley</option>
+                  <option value="Pontefract">Pontefract</option>
+                  <option value="Windsor">Windsor</option>
+                  <option value="York">York</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Age {isTrackModel && <span style={{ color: '#999' }}>(ignored)</span>}</label>
                 <select
                   value={predictInputs.age}
                   onChange={(e) => setPredictInputs({...predictInputs, age: parseInt(e.target.value)})}
-                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}
+                  disabled={isTrackModel}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', opacity: isTrackModel ? 0.5 : 1 }}
                 >
                   <option value={3}>3yo</option>
                   <option value={4}>4+yo</option>
@@ -217,22 +261,29 @@ const Current3yo4yo = () => {
             </div>
 
             {(() => {
-              const currentStats = predictInputs.age === 3 ? stats3yo : stats4plus;
-              if (!currentStats) return <p style={{ textAlign: 'center', color: '#999', fontSize: '14px' }}>Not enough data</p>;
+              let prediction, modelLabel, r2, sampleN;
 
-              // Polynomial model: intercept + b1*SPS + b2*SL + b3*SPS²
-              const prediction =
-                currentStats.coefficients[0] +
-                currentStats.coefficients[1] * predictInputs.spsAvg +
-                currentStats.coefficients[2] * predictInputs.slAvg +
-                currentStats.coefficients[3] * predictInputs.spsAvg * predictInputs.spsAvg;
+              if (isTrackModel) {
+                const m = TRACK_MODELS[track];
+                prediction = m.b0 + m.b1 * predictInputs.spsAvg + m.b2 * predictInputs.slAvg + m.b3 * predictInputs.spsAvg * predictInputs.spsAvg;
+                modelLabel = track;
+                r2 = m.r2;
+                sampleN = m.n;
+              } else {
+                const currentStats = predictInputs.age === 3 ? stats3yo : stats4plus;
+                if (!currentStats) return <p style={{ textAlign: 'center', color: '#999', fontSize: '14px' }}>Not enough data</p>;
+                prediction = currentStats.coefficients[0] + currentStats.coefficients[1] * predictInputs.spsAvg + currentStats.coefficients[2] * predictInputs.slAvg + currentStats.coefficients[3] * predictInputs.spsAvg * predictInputs.spsAvg;
+                modelLabel = predictInputs.age === 3 ? '3-Year-Old' : '4+ Years';
+                r2 = currentStats.rSquared * 100;
+                sampleN = currentStats.n;
+              }
 
               return (
                 <div style={{ background: '#e0f2fe', border: '3px solid #0ea5e9', borderRadius: '12px', padding: '32px', textAlign: 'center', marginTop: '16px' }}>
                   <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px', letterSpacing: '1px' }}>PREDICTED DISTANCE</p>
                   <p style={{ fontSize: '72px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '8px', lineHeight: '1' }}>{prediction.toFixed(1)}f</p>
                   <p style={{ fontSize: '13px', color: '#64748b' }}>
-                    {predictInputs.age === 3 ? '3-Year-Old' : '4+ Years'} • R²: {(currentStats.rSquared * 100).toFixed(1)}% • n={currentStats.n}
+                    {modelLabel} • R²: {r2.toFixed(1)}% • n={sampleN}
                   </p>
                 </div>
               );
