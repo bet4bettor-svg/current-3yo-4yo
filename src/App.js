@@ -8,6 +8,7 @@ const TRACK_MODELS = {
   Ascot:             { b0: 317.542, b1: -222.246, b2: -3.481, b3: 42.977,  n: 356, r2: 80.76 },
   Pontefract:        { b0: 180.339, b1: -103.237, b2: -3.818, b3: 17.263,  n: 227, r2: 70.35 },
   Haydock:           { b0: 275.168, b1: -185.838, b2: -4.247, b3: 36.204,  n: 299, r2: 83.34 },
+  Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
   Sandown:           { b0: 4.0163, b1: 33.2695, b2: -2.6377, b3: -10.1798, n: 249, r2: 68.78 },
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
   Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
@@ -222,6 +223,7 @@ const Current3yo4yo = () => {
                   <option value="Epsom">Epsom</option>
                   <option value="Goodwood">Goodwood</option>
                   <option value="Haydock">Haydock</option>
+                  <option value="Kempton">Kempton</option>
                   <option value="Newcastle">Newcastle</option>
                   <option value="Newmarket Rowley">Newmarket Rowley</option>
                   <option value="Pontefract">Pontefract</option>
