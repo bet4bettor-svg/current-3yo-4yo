@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { defaultData } from './data/trainingData';
 
 const TRACK_MODELS = {
+  Doncaster:         { b0: 156.260, b1: -85.012, b2: -4.057, b3: 14.688, n: 275, r2: 70.23 },
   Epsom:             { b0: 129.079, b1: -71.751,  b2: -3.329, b3: 13.014,  n: 195, r2: 96.23 },
   Goodwood:          { b0: 360.529, b1: -266.752, b2: -3.344, b3: 54.024,  n: 310, r2: 82.84 },
   York:              { b0: 224.725, b1: -143.358, b2: -3.863, b3: 26.832,  n: 463, r2: 85.29 },
@@ -221,6 +222,7 @@ const Current3yo4yo = () => {
                 >
                   <option value="General">General</option>
                   <option value="Ascot">Ascot</option>
+                  <option value="Doncaster">Doncaster</option>
                   <option value="Epsom">Epsom</option>
                   <option value="Goodwood">Goodwood</option>
                   <option value="Haydock">Haydock</option>
