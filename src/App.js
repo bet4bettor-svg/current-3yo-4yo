@@ -12,6 +12,7 @@ const TRACK_MODELS = {
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
   Sandown:           { b0: 4.0163, b1: 33.2695, b2: -2.6377, b3: -10.1798, n: 249, r2: 68.78 },
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
+  Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
   Newbury:           { b0: 202.416, b1: -115.233, b2: -5.260, b3: 20.807, n: 290, r2: 84.50 },
   Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
   'Newmarket Rowley': { b0: 75.746, b1: -6.468, b2: -5.042, b3: -2.764, n: 229, r2: 83.85 },
@@ -227,6 +228,7 @@ const Current3yo4yo = () => {
                   <option value="Goodwood">Goodwood</option>
                   <option value="Haydock">Haydock</option>
                   <option value="Kempton">Kempton</option>
+                  <option value="Lingfield">Lingfield</option>
                   <option value="Newbury">Newbury</option>
                   <option value="Newcastle">Newcastle</option>
                   <option value="Newmarket Rowley">Newmarket Rowley</option>
