@@ -12,6 +12,7 @@ const TRACK_MODELS = {
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
   Sandown:           { b0: 4.0163, b1: 33.2695, b2: -2.6377, b3: -10.1798, n: 249, r2: 68.78 },
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
+  Wolverhampton:     { b0: 190.262, b1: -97.624, b2: -6.325, b3: 16.640, n: 246, r2: 86.35 },
   Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
   Newbury:           { b0: 202.416, b1: -115.233, b2: -5.260, b3: 20.807, n: 290, r2: 84.50 },
   Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
@@ -235,6 +236,7 @@ const Current3yo4yo = () => {
                   <option value="Pontefract">Pontefract</option>
                   <option value="Sandown">Sandown</option>
                   <option value="Windsor">Windsor</option>
+                  <option value="Wolverhampton">Wolverhampton</option>
                   <option value="York">York</option>
                 </select>
               </div>
