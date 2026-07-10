@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { defaultData } from './data/trainingData';
 
 const TRACK_MODELS = {
-  Carlisle:          { b0: 78.7570, b1: -28.0494, b2: -3.3680, b3: 3.1991, n: 154, r2: 85.14 },
+  Carlisle:          { b0: 241.3096, b1: -156.3957, b2: -4.7794, b3: 30.2822, n: 165, r2: 76.10 },
   Doncaster:         { b0: 156.260, b1: -85.012, b2: -4.057, b3: 14.688, n: 275, r2: 70.23 },
   Epsom:             { b0: 129.079, b1: -71.751,  b2: -3.329, b3: 13.014,  n: 195, r2: 96.23 },
   Goodwood:          { b0: 360.529, b1: -266.752, b2: -3.344, b3: 54.024,  n: 310, r2: 82.84 },
