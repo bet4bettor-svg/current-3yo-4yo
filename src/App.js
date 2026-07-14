@@ -21,10 +21,10 @@ const TRACK_MODELS = {
 };
  
 const GENERAL_MODELS = {
-  Good: { b0: 443.52, b1: -242.83, b2: -31.24, b3: 30.10, b4: 11.47, n: 218, r2: 84.41, label: 'Good' },
-  GtF:  { b0: 516.02, b1: -276.36, b2: -40.28, b3: 30.76, b4: 15.48, n: 146, r2: 88.96, label: 'Good to Firm' },
-  GtS:  { b0: 336.29, b1: -213.72, b2: -11.18, b3: 36.22, b4: 3.22,  n: 149, r2: 83.74, label: 'Good to Soft' },
-  Soft: { b0: 474.83, b1: -238.83, b2: -43.60, b3: 21.90, b4: 16.91, n: 144, r2: 81.98, label: 'Soft' },
+  Good: { b0: 242.3511, b1: -155.4955, b2: -4.3330, b3: 29.4332, b4: null, n: 234, r2: 84.75, label: 'Good' },
+  GtF:  { b0: 219.3108, b1: -138.5441, b2: -3.9701, b3: 25.9627, b4: null, n: 142, r2: 86.34, label: 'Good to Firm' },
+  GtS:  { b0: 255.1455, b1: -167.3730, b2: -3.8224, b3: 31.4426, b4: null, n: 194, r2: 83.70, label: 'Good to Soft' },
+  Soft: { b0: 429.3964, b1: -217.9137, b2: -37.6538, b3: 21.3579, b4: 14.3386, n: 183, r2: 83.04, label: 'Soft' },
 };
  
 const Current3yo4yo = () => {
@@ -198,7 +198,10 @@ const Current3yo4yo = () => {
                 sampleN = m.n;
               } else {
                 const gm = GENERAL_MODELS[going];
-                prediction = gm.b0 + gm.b1 * sps + gm.b2 * sl + gm.b3 * sps * sps + gm.b4 * sps * sl;
+                prediction = gm.b0 + gm.b1 * sps + gm.b2 * sl + gm.b3 * sps * sps;
+                if (gm.b4 !== null) {
+                  prediction += gm.b4 * sps * sl;
+                }
  
                 modelLabel = gm.label;
                 r2 = gm.r2;
