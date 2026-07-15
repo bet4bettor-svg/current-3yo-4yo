@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
  
 const TRACK_MODELS = {
@@ -6,7 +7,7 @@ const TRACK_MODELS = {
   Epsom:             { b0: 126.3296, b1: -68.3779,  b2: -3.4308, b3: 12.2257,  n: 313, r2: 96.99 },
   Goodwood:          { b0: 360.529, b1: -266.752, b2: -3.344, b3: 54.024,  n: 310, r2: 82.84 },
   York:              { b0: 224.725, b1: -143.358, b2: -3.863, b3: 26.832,  n: 463, r2: 85.29 },
-  Ascot:             { b0: 317.542, b1: -222.246, b2: -3.481, b3: 42.977,  n: 356, r2: 80.76 },
+  'Ascot (Straight)': { b0: 97.332, b1: -44.930, b2: -3.194, b3: 7.018,  n: 305, r2: 90.76 },
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
   Haydock:           { b0: 275.168, b1: -185.838, b2: -4.247, b3: 36.204,  n: 299, r2: 83.34 },
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
@@ -25,6 +26,29 @@ const GENERAL_MODELS = {
   GtF:  { b0: 219.3108, b1: -138.5441, b2: -3.9701, b3: 25.9627, b4: null, n: 142, r2: 86.34, label: 'Good to Firm' },
   GtS:  { b0: 255.1455, b1: -167.3730, b2: -3.8224, b3: 31.4426, b4: null, n: 194, r2: 83.70, label: 'Good to Soft' },
   Soft: { b0: 429.3964, b1: -217.9137, b2: -37.6538, b3: 21.3579, b4: 14.3386, n: 183, r2: 83.04, label: 'Soft' },
+};
+ 
+const TRACK_ROUTING = {
+  'Ascot (Straight)': [
+    { icon: '⚑', text: '7f predictions run ~0.5f long — adjust down' },
+    { icon: '→', text: 'Round course races (7.97f+): use GM instead' },
+    { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Epsom: [
+    { icon: '⚑', text: '8.51f on Good: lower confidence' },
+    { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Pontefract: [
+    { icon: '⚑', text: '5f predictions run ~0.5f long' },
+    { icon: '⚑', text: '12f+: apply Min SPS correction' },
+    { icon: '→', text: 'GtF / GtS / Soft: no reliable model — directional only' },
+  ],
+  Carlisle: [
+    { icon: '⚑', text: '9f: lower confidence' },
+    { icon: '⚑', text: '11.18f+: use GM + Min SPS correction' },
+    { icon: '→', text: 'GtF: over-predicts ~0.3f at sprint/middle' },
+    { icon: '→', text: 'GtS: unreliable — directional only' },
+  ],
 };
  
 const Current3yo4yo = () => {
@@ -208,14 +232,28 @@ const Current3yo4yo = () => {
                 sampleN = gm.n;
               }
  
+              const routing = isTrackModel ? TRACK_ROUTING[track] : null;
+ 
               return (
-                <div style={{ background: '#e0f2fe', border: '3px solid #0ea5e9', borderRadius: '12px', padding: '32px', textAlign: 'center', marginTop: '16px' }}>
-                  <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px', letterSpacing: '1px' }}>PREDICTED DISTANCE</p>
-                  <p style={{ fontSize: '72px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '8px', lineHeight: '1' }}>{prediction.toFixed(1)}f</p>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>
-                    {modelLabel} • R²: {r2.toFixed(1)}% • n={sampleN}
-                  </p>
-                </div>
+                <>
+                  <div style={{ background: '#e0f2fe', border: '3px solid #0ea5e9', borderRadius: '12px', padding: '32px', textAlign: 'center', marginTop: '16px' }}>
+                    <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px', letterSpacing: '1px' }}>PREDICTED DISTANCE</p>
+                    <p style={{ fontSize: '72px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '8px', lineHeight: '1' }}>{prediction.toFixed(1)}f</p>
+                    <p style={{ fontSize: '13px', color: '#64748b' }}>
+                      {modelLabel} • R²: {r2.toFixed(1)}% • n={sampleN}
+                    </p>
+                  </div>
+                  {routing && (
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '14px 16px', marginTop: '12px', fontSize: '13px', color: '#475569' }}>
+                      {routing.map((item, i) => (
+                        <p key={i} style={{ margin: '3px 0', paddingLeft: '2px' }}>
+                          <span style={{ color: item.icon === '⚑' ? '#d97706' : '#6366f1', marginRight: '6px', fontWeight: '600' }}>{item.icon}</span>
+                          {item.text}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </>
               );
             })()}
           </div>
@@ -226,3 +264,4 @@ const Current3yo4yo = () => {
 };
  
 export default Current3yo4yo;
+ 
