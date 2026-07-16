@@ -16,7 +16,7 @@ const TRACK_MODELS = {
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
   Wolverhampton:     { b0: 190.262, b1: -97.624, b2: -6.325, b3: 16.640, n: 246, r2: 86.35 },
   Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
-  Newbury:           { b0: 202.416, b1: -115.233, b2: -5.260, b3: 20.807, n: 290, r2: 84.50 },
+  'Newbury (Straight)': { b0: 33.230, b1: 6.001, b2: -2.984, b3: -3.261, n: 182, r2: 86.03 },
   Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
   'Newmarket Rowley': { b0: 75.746, b1: -6.468, b2: -5.042, b3: -2.764, n: 229, r2: 83.85 },
 };
@@ -48,6 +48,11 @@ const TRACK_ROUTING = {
     { icon: '⚑', text: '11.18f+: use GM + Min SPS correction' },
     { icon: '→', text: 'GtF: over-predicts ~0.3f at sprint/middle' },
     { icon: '→', text: 'GtS: unreliable — directional only' },
+  ],
+  'Newbury (Straight)': [
+    { icon: '⚑', text: '5.15f predictions run ~0.35f long' },
+    { icon: '→', text: 'Round course races (10f+): use GM instead' },
+    { icon: '→', text: 'GtS / Soft: use GM' },
   ],
 };
  
