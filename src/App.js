@@ -1,18 +1,17 @@
-
 import React, { useState } from 'react';
  
 const TRACK_MODELS = {
   Carlisle:          { b0: 241.3096, b1: -156.3957, b2: -4.7794, b3: 30.2822, n: 165, r2: 76.10 },
   Doncaster:         { b0: 156.260, b1: -85.012, b2: -4.057, b3: 14.688, n: 275, r2: 70.23 },
   Epsom:             { b0: 126.3296, b1: -68.3779,  b2: -3.4308, b3: 12.2257,  n: 313, r2: 96.99 },
-  Goodwood:          { b0: 360.529, b1: -266.752, b2: -3.344, b3: 54.024,  n: 310, r2: 82.84 },
+  Goodwood:          { b0: 275.8087, b1: -197.5548, b2: -3.0915, b3: 39.5758, n: 295, r2: 88.12 },
   York:              { b0: 224.725, b1: -143.358, b2: -3.863, b3: 26.832,  n: 463, r2: 85.29 },
   'Ascot (Straight)': { b0: 97.332, b1: -44.930, b2: -3.194, b3: 7.018,  n: 305, r2: 90.76 },
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
   Haydock:           { b0: 275.168, b1: -185.838, b2: -4.247, b3: 36.204,  n: 299, r2: 83.34 },
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
   Ripon:             { b0: 68.7257, b1: -16.5715, b2: -3.6815, b3: 0.8997, n: 247, r2: 87.35 },
-  Sandown:           { b0: 4.0163, b1: 33.2695, b2: -2.6377, b3: -10.1798, n: 249, r2: 68.78 },
+  Sandown:           { b0: 32.7060, b1: 9.8688, b2: -3.0865, b3: -4.8012, n: 209, r2: 69.77 },
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
   Wolverhampton:     { b0: 190.262, b1: -97.624, b2: -6.325, b3: 16.640, n: 246, r2: 86.35 },
   Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
@@ -48,6 +47,19 @@ const TRACK_ROUTING = {
     { icon: '⚑', text: '11.18f+: use GM + Min SPS correction' },
     { icon: '→', text: 'GtF: over-predicts ~0.3f at sprint/middle' },
     { icon: '→', text: 'GtS: unreliable — directional only' },
+  ],
+  Goodwood: [
+    { icon: '⚑', text: '14f: apply Min SPS correction' },
+    { icon: '⚑', text: '7f on GtS: under-predicts ~1.3f' },
+    { icon: '⚑', text: 'GtS generally lower confidence' },
+    { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Sandown: [
+    { icon: '⚑', text: '7f and 8f: under-predict ~0.9f' },
+    { icon: '⚑', text: '10f: over-predicts ~1.3f' },
+    { icon: '⚑', text: 'GtS: lower confidence (limited data)' },
+    { icon: '→', text: '14f+: use GM' },
+    { icon: '→', text: 'Soft ground: use GM Soft' },
   ],
   'Newbury (Straight)': [
     { icon: '⚑', text: '5.15f predictions run ~0.35f long' },
@@ -269,4 +281,3 @@ const Current3yo4yo = () => {
 };
  
 export default Current3yo4yo;
- 
