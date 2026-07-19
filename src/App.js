@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
  
 const TRACK_MODELS = {
   Carlisle:          { b0: 241.3096, b1: -156.3957, b2: -4.7794, b3: 30.2822, n: 165, r2: 76.10 },
+  Chester:           { b0: 116.5001, b1: -51.6424, b2: -4.0898, b3: 7.6667, n: 96, r2: 88.68 },
   Doncaster:         { b0: 156.260, b1: -85.012, b2: -4.057, b3: 14.688, n: 275, r2: 70.23 },
   Epsom:             { b0: 126.3296, b1: -68.3779,  b2: -3.4308, b3: 12.2257,  n: 313, r2: 96.99 },
   Goodwood:          { b0: 275.8087, b1: -197.5548, b2: -3.0915, b3: 39.5758, n: 295, r2: 88.12 },
@@ -15,6 +17,7 @@ const TRACK_MODELS = {
   Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
   Wolverhampton:     { b0: 190.262, b1: -97.624, b2: -6.325, b3: 16.640, n: 246, r2: 86.35 },
   Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
+  Musselburgh:       { b0: 365.7160, b1: -259.9399, b2: -5.2925, b3: 52.5882, n: 137, r2: 90.90 },
   'Newbury (Straight)': { b0: 33.230, b1: 6.001, b2: -2.984, b3: -3.261, n: 182, r2: 86.03 },
   Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
   'Newmarket Rowley': { b0: 75.746, b1: -6.468, b2: -5.042, b3: -2.764, n: 229, r2: 83.85 },
@@ -33,9 +36,30 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Round course races (7.97f+): use GM instead' },
     { icon: '→', text: 'Soft ground: use GM Soft' },
   ],
+  Chester: [
+    { icon: '→', text: '12.29f: use GM Good (track model structural flag)' },
+    { icon: '→', text: 'GtF: use GM GtF (10f+ predictions lower confidence)' },
+    { icon: '→', text: 'GtS: use GM GtS (limited data — treat as directional)' },
+    { icon: '→', text: 'Soft: use GM Soft (7f Soft structurally broken for all models)' },
+    { icon: '→', text: '15.89f: use GM + Min SPS correction' },
+  ],
+  Doncaster: [
+    { icon: '⚑', text: '7.97R (round mile): subtract 1.1f from prediction' },
+    { icon: '⚑', text: '8.00S (straight mile): Good ground data unavailable — treat as directional' },
+    { icon: '→', text: '14.52f: use GM + Min SPS correction' },
+  ],
   Epsom: [
     { icon: '⚑', text: '8.51f on Good: lower confidence' },
     { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Haydock: [
+    { icon: '⚑', text: '11.72f and 14f: treat as directional, not precise' },
+  ],
+  Kempton: [
+    { icon: '⚑', text: 'Slowly run races: treat prediction with caution' },
+  ],
+  Lingfield: [
+    { icon: '→', text: '5.03f: use GM' },
   ],
   Pontefract: [
     { icon: '⚑', text: '5f predictions run ~0.5f long' },
@@ -49,10 +73,22 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'GtS: unreliable — directional only' },
   ],
   Goodwood: [
-    { icon: '⚑', text: '14f: apply Min SPS correction' },
+    { icon: '→', text: '14f Good/GtF/GtS: use GM + Min SPS correction' },
+    { icon: '→', text: '14f Soft: use GM Soft (no Min SPS needed)' },
     { icon: '⚑', text: '7f on GtS: under-predicts ~1.3f' },
     { icon: '⚑', text: 'GtS generally lower confidence' },
+    { icon: '→', text: 'Soft ground (non-14f): use GM Soft' },
+  ],
+  Musselburgh: [
+    { icon: '⚑', text: '12.47f+: use GM + Min SPS correction' },
+    { icon: '→', text: 'GtF: use GM Good to Firm' },
     { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Newcastle: [
+    { icon: '⚑', text: '12.45f+: apply Min SPS correction' },
+  ],
+  'Newmarket Rowley': [
+    { icon: '⚑', text: '12f: apply Min SPS correction' },
   ],
   Sandown: [
     { icon: '⚑', text: '7f and 8f: under-predict ~0.9f' },
@@ -65,6 +101,17 @@ const TRACK_ROUTING = {
     { icon: '⚑', text: '5.15f predictions run ~0.35f long' },
     { icon: '→', text: 'Round course races (10f+): use GM instead' },
     { icon: '→', text: 'GtS / Soft: use GM' },
+  ],
+  Ripon: [
+    { icon: '⚑', text: '9.77f: lower confidence, under-predicts ~0.6–0.7f' },
+    { icon: '→', text: '12.05f+: use GM + Min SPS correction' },
+  ],
+  York: [
+    { icon: '⚑', text: '13.85f: apply Min SPS correction' },
+    { icon: '→', text: 'Soft ground: use GM Soft' },
+  ],
+  Wolverhampton: [
+    { icon: '⚑', text: '12.23f+: apply Min SPS correction' },
   ],
 };
  
@@ -281,3 +328,4 @@ const Current3yo4yo = () => {
 };
  
 export default Current3yo4yo;
+ 
