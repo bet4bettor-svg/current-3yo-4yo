@@ -1,26 +1,27 @@
-
 import React, { useState } from 'react';
  
 const TRACK_MODELS = {
   Carlisle:          { b0: 241.3096, b1: -156.3957, b2: -4.7794, b3: 30.2822, n: 165, r2: 76.10 },
-  Chester:           { b0: 116.5001, b1: -51.6424, b2: -4.0898, b3: 7.6667, n: 96, r2: 88.68 },
-  Doncaster:         { b0: 156.260, b1: -85.012, b2: -4.057, b3: 14.688, n: 275, r2: 70.23 },
+  Chester:           { b0: 133.8191, b1: -67.6699, b2: -3.9198, b3: 11.0860, n: 147, r2: 89.20 },
+  Doncaster:         { b0: 126.143, b1: -65.711, b2: -3.412, b3: 11.040, n: 260, r2: 76.57 },
   Epsom:             { b0: 126.3296, b1: -68.3779,  b2: -3.4308, b3: 12.2257,  n: 313, r2: 96.99 },
   Goodwood:          { b0: 275.8087, b1: -197.5548, b2: -3.0915, b3: 39.5758, n: 295, r2: 88.12 },
-  York:              { b0: 224.725, b1: -143.358, b2: -3.863, b3: 26.832,  n: 463, r2: 85.29 },
+  York:              { b0: 198.4051, b1: -118.5363, b2: -4.3229, b3: 21.7015, n: 397, r2: 87.97 },
   'Ascot (Straight)': { b0: 97.332, b1: -44.930, b2: -3.194, b3: 7.018,  n: 305, r2: 90.76 },
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
-  Haydock:           { b0: 275.168, b1: -185.838, b2: -4.247, b3: 36.204,  n: 299, r2: 83.34 },
+  Haydock:           { b0: 527.5982, b1: -264.3835, b2: -48.0935, b3: 23.0892, b4: 18.9158, n: 227, r2: 87.03 },
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
   Ripon:             { b0: 68.7257, b1: -16.5715, b2: -3.6815, b3: 0.8997, n: 247, r2: 87.35 },
-  Sandown:           { b0: 32.7060, b1: 9.8688, b2: -3.0865, b3: -4.8012, n: 209, r2: 69.77 },
-  Windsor:           { b0: 136.717, b1: -74.255,  b2: -3.399, b3: 12.774,  n: 203, r2: 83.41 },
-  Wolverhampton:     { b0: 190.262, b1: -97.624, b2: -6.325, b3: 16.640, n: 246, r2: 86.35 },
-  Lingfield:         { b0: 196.658, b1: -112.300, b2: -4.804, b3: 19.757, n: 287, r2: 67.66 },
+  Sandown:           { b0: 31.6375, b1: 11.0530, b2: -3.1165, b3: -5.0716, n: 207, r2: 69.81 },
+  Salisbury:         { b0: 135.0788, b1: -61.3327, b2: -5.0166, b3: 9.4377, n: 259, r2: 81.79 },
+  Southwell:         { b0: 525.2322, b1: -271.7301, b2: -44.7928, b3: 28.6818, b4: 16.8293, n: 201, r2: 91.29 },
+  Windsor:           { b0: 134.1232, b1: -72.1726, b2: -3.3936, b3: 12.3567, n: 196, r2: 83.29 },
+  Wolverhampton:     { b0: 654.912, b1: -352.292, b2: -53.848, b3: 39.556, b4: 20.641, n: 274, r2: 87.18 },
+  Lingfield:         { b0: 459.564, b1: -270.563, b2: -28.340, b3: 37.714, b4: 10.598, n: 331, r2: 75.20 },
   Musselburgh:       { b0: 365.7160, b1: -259.9399, b2: -5.2925, b3: 52.5882, n: 137, r2: 90.90 },
   'Newbury (Straight)': { b0: 33.230, b1: 6.001, b2: -2.984, b3: -3.261, n: 182, r2: 86.03 },
-  Newcastle:         { b0: 185.179, b1: -105.081, b2: -4.444, b3: 18.518, n: 241, r2: 83.30 },
-  'Newmarket Rowley': { b0: 75.746, b1: -6.468, b2: -5.042, b3: -2.764, n: 229, r2: 83.85 },
+  'Newcastle (Straight)': { b0: 96.8734, b1: -38.7571, b2: -3.6915, b3: 5.2610, n: 168, r2: 81.39 },
+  'Newmarket Rowley': { b0: 97.5249, b1: -26.7433, b2: -4.8786, b3: 1.6839, n: 235, r2: 85.33 },
 };
  
 const GENERAL_MODELS = {
@@ -37,15 +38,15 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Soft ground: use GM Soft' },
   ],
   Chester: [
-    { icon: '→', text: '12.29f: use GM Good (track model structural flag)' },
+    { icon: '→', text: '12.29f: use GM Good' },
     { icon: '→', text: 'GtF: use GM GtF (10f+ predictions lower confidence)' },
-    { icon: '→', text: 'GtS: use GM GtS (limited data — treat as directional)' },
-    { icon: '→', text: 'Soft: use GM Soft (7f Soft structurally broken for all models)' },
+    { icon: '→', text: 'Soft: use GM Soft (7f structurally broken)' },
     { icon: '→', text: '15.89f: use GM + Min SPS correction' },
   ],
   Doncaster: [
-    { icon: '⚑', text: '7.97R (round mile): subtract 1.1f from prediction' },
-    { icon: '⚑', text: '8.00S (straight mile): Good ground data unavailable — treat as directional' },
+    { icon: '⚑', text: 'Good/GtF — GtS/Soft route to GM' },
+    { icon: '⚑', text: '10.2f: under-predicts ~0.9f' },
+    { icon: '⚑', text: '11.9f: under-predicts ~1.3f' },
     { icon: '→', text: '14.52f: use GM + Min SPS correction' },
   ],
   Epsom: [
@@ -53,13 +54,18 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Soft ground: use GM Soft' },
   ],
   Haydock: [
-    { icon: '⚑', text: '11.72f and 14f: treat as directional, not precise' },
+    { icon: '⚑', text: 'Good only — GtF/GtS/Soft route to GM' },
+    { icon: '⚑', text: '7f: over-predicts ~0.7f' },
+    { icon: '→', text: '13f+: use GM Good + Min SPS correction' },
   ],
   Kempton: [
     { icon: '⚑', text: 'Slowly run races: treat prediction with caution' },
+    { icon: '→', text: '12f: use GM Good' },
+    { icon: '⚑', text: '16f: track model + Min SPS correction' },
   ],
   Lingfield: [
-    { icon: '→', text: '5.03f: use GM' },
+    { icon: '⚑', text: '6f: over-predicts ~0.7f' },
+    { icon: '→', text: '12f: use GM Good' },
   ],
   Pontefract: [
     { icon: '⚑', text: '5f predictions run ~0.5f long' },
@@ -69,33 +75,46 @@ const TRACK_ROUTING = {
   Carlisle: [
     { icon: '⚑', text: '9f: lower confidence' },
     { icon: '⚑', text: '11.18f+: use GM + Min SPS correction' },
-    { icon: '→', text: 'GtF: over-predicts ~0.3f at sprint/middle' },
+    { icon: '→', text: 'GtF: under-predicts ~0.3f at sprint/middle' },
     { icon: '→', text: 'GtS: unreliable — directional only' },
   ],
   Goodwood: [
     { icon: '→', text: '14f Good/GtF/GtS: use GM + Min SPS correction' },
     { icon: '→', text: '14f Soft: use GM Soft (no Min SPS needed)' },
-    { icon: '⚑', text: '7f on GtS: under-predicts ~1.3f' },
+    { icon: '⚑', text: '7f on GtS: over-predicts ~1.3f' },
     { icon: '⚑', text: 'GtS generally lower confidence' },
     { icon: '→', text: 'Soft ground (non-14f): use GM Soft' },
   ],
   Musselburgh: [
-    { icon: '⚑', text: '12.47f+: use GM + Min SPS correction' },
-    { icon: '→', text: 'GtF: use GM Good to Firm' },
-    { icon: '→', text: 'Soft ground: use GM Soft' },
+    { icon: '⚑', text: 'Good only — GtF/GtS/Soft route to GM' },
+    { icon: '⚑', text: '7.07f: over-predicts ~0.65f' },
+    { icon: '→', text: '12.47f+: use GM Good + Min SPS correction' },
   ],
-  Newcastle: [
-    { icon: '⚑', text: '12.45f+: apply Min SPS correction' },
+  'Newcastle (Straight)': [
+    { icon: '⚑', text: 'Straight course model only (5f, 6f, 7.06f, 8.02f)' },
+    { icon: '⚠', text: '10.19f: no reliable prediction — biomechanical signal insufficient' },
+    { icon: '→', text: '12.45f: use GM Good + Min SPS correction' },
+    { icon: '→', text: '16.25f: use GM Good + Min SPS correction' },
   ],
   'Newmarket Rowley': [
-    { icon: '⚑', text: '12f: apply Min SPS correction' },
+    { icon: '⚑', text: 'Good only — GtF/GtS/Soft route to GM' },
+    { icon: '⚑', text: '5f/7f: over-predicts ~0.5–0.7f' },
+    { icon: '⚑', text: '12f: under-predicts ~0.6f' },
   ],
   Sandown: [
-    { icon: '⚑', text: '7f and 8f: under-predict ~0.9f' },
-    { icon: '⚑', text: '10f: over-predicts ~1.3f' },
-    { icon: '⚑', text: 'GtS: lower confidence (limited data)' },
-    { icon: '→', text: '14f+: use GM' },
-    { icon: '→', text: 'Soft ground: use GM Soft' },
+    { icon: '⚑', text: 'Good/GtF/GtS — Soft routes to GM Soft' },
+    { icon: '⚑', text: '7f/8f: over-predicts ~0.7–0.8f' },
+    { icon: '⚑', text: '9.95f: under-predicts ~1.3f' },
+    { icon: '→', text: '14f: use GM Good + Min SPS correction' },
+  ],
+  Salisbury: [
+    { icon: '⚑', text: '6f Good: over-predicts ~0.9f — treat as upper bound' },
+    { icon: '→', text: '12.02f: use GM Good + Min SPS correction' },
+    { icon: '→', text: 'Soft / GtS: use GM' },
+  ],
+  Southwell: [
+    { icon: '⚑', text: '12.06f: directional (+0.6f bias)' },
+    { icon: '→', text: '14.10f+: use GM Good (AW caveat — directional)' },
   ],
   'Newbury (Straight)': [
     { icon: '⚑', text: '5.15f predictions run ~0.35f long' },
@@ -103,15 +122,23 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'GtS / Soft: use GM' },
   ],
   Ripon: [
-    { icon: '⚑', text: '9.77f: lower confidence, under-predicts ~0.6–0.7f' },
-    { icon: '→', text: '12.05f+: use GM + Min SPS correction' },
+    { icon: '⚑', text: 'Good/GtF — GtS/Soft route to GM' },
+    { icon: '⚑', text: '9.77f: under-predicts ~0.6f' },
+    { icon: '→', text: '12.05f: use GM Good' },
+    { icon: '→', text: '16f: use GM Good + Min SPS correction' },
   ],
   York: [
-    { icon: '⚑', text: '13.85f: apply Min SPS correction' },
-    { icon: '→', text: 'Soft ground: use GM Soft' },
+    { icon: '⚑', text: 'Good/GtF/GtS — Soft routes to GM Soft' },
+    { icon: '⚑', text: '13.85f: use GM Good + Min SPS correction' },
   ],
   Wolverhampton: [
-    { icon: '⚑', text: '12.23f+: apply Min SPS correction' },
+    { icon: '⚑', text: '12.23f: under-predicts ~0.6f (monitoring)' },
+    { icon: '⚑', text: '14f: track model + Min SPS correction' },
+  ],
+  Windsor: [
+    { icon: '⚑', text: 'Good/GtF — GtS routes to GM GtS, Soft to GM Soft' },
+    { icon: '⚑', text: '8.14f: over-predicts ~1.1f' },
+    { icon: '→', text: '11.45f: use GM Good + Min SPS correction' },
   ],
 };
  
@@ -281,6 +308,9 @@ const Current3yo4yo = () => {
               if (isTrackModel) {
                 const m = TRACK_MODELS[track];
                 prediction = m.b0 + m.b1 * sps + m.b2 * sl + m.b3 * sps * sps;
+                if (m.b4) {
+                  prediction += m.b4 * sps * sl;
+                }
                 modelLabel = track;
                 r2 = m.r2;
                 sampleN = m.n;
