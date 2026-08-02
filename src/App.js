@@ -25,10 +25,10 @@ const TRACK_MODELS = {
 };
  
 const GENERAL_MODELS = {
-  Good: { b0: 242.3511, b1: -155.4955, b2: -4.3330, b3: 29.4332, b4: null, n: 234, r2: 84.75, label: 'Good' },
-  GtF:  { b0: 219.3108, b1: -138.5441, b2: -3.9701, b3: 25.9627, b4: null, n: 142, r2: 86.34, label: 'Good to Firm' },
-  GtS:  { b0: 255.1455, b1: -167.3730, b2: -3.8224, b3: 31.4426, b4: null, n: 194, r2: 83.70, label: 'Good to Soft' },
-  Soft: { b0: 429.3964, b1: -217.9137, b2: -37.6538, b3: 21.3579, b4: 14.3386, n: 183, r2: 83.04, label: 'Soft' },
+  Good: { b0: 243.8401, b1: -157.3179, b2: -4.2052, b3: 29.7701, b4: null, n: 230, r2: 85.26, label: 'Good' },
+  GtF:  { b0: 194.0662, b1: -114.8222, b2: -4.2434, b3: 20.8401, b4: null, n: 134, r2: 88.85, label: 'Good to Firm' },
+  GtS:  { b0: 245.2961, b1: -157.9634, b2: -3.9298, b3: 29.3874, b4: null, n: 183, r2: 85.85, label: 'Good to Soft' },
+  Soft: { b0: 398.9669, b1: -192.5925, b2: -37.0147, b3: 16.2979, b4: 14.0072, n: 167, r2: 86.55, label: 'Soft' },
 };
  
 const TRACK_ROUTING = {
