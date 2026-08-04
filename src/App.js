@@ -11,6 +11,7 @@ const TRACK_MODELS = {
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
   Haydock:           { b0: 527.5982, b1: -264.3835, b2: -48.0935, b3: 23.0892, b4: 18.9158, n: 227, r2: 87.03 },
   Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
+  Redcar:            { b0: 77.6477, b1: -20.5973, b2: -4.0744, b3: 1.6006, n: 224, r2: 94.74 },
   Ripon:             { b0: 68.7257, b1: -16.5715, b2: -3.6815, b3: 0.8997, n: 247, r2: 87.35 },
   Sandown:           { b0: 31.6375, b1: 11.0530, b2: -3.1165, b3: -5.0716, n: 207, r2: 69.81 },
   Salisbury:         { b0: 135.0788, b1: -61.3327, b2: -5.0166, b3: 9.4377, n: 259, r2: 81.79 },
@@ -22,6 +23,7 @@ const TRACK_MODELS = {
   'Newbury (Straight)': { b0: 33.230, b1: 6.001, b2: -2.984, b3: -3.261, n: 182, r2: 86.03 },
   'Newcastle (Straight)': { b0: 96.8734, b1: -38.7571, b2: -3.6915, b3: 5.2610, n: 168, r2: 81.39 },
   'Newmarket Rowley': { b0: 97.5249, b1: -26.7433, b2: -4.8786, b3: 1.6839, n: 235, r2: 85.33 },
+  Thirsk:            { b0: -6.2032, b1: 28.5311, b2: -1.7549, b3: -7.4873, n: 314, r2: 85.17 },
 };
  
 const GENERAL_MODELS = {
@@ -121,11 +123,21 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Round course races (10f+): use GM instead' },
     { icon: '→', text: 'GtS / Soft: use GM' },
   ],
+  Redcar: [
+    { icon: '⚑', text: 'Good/GtF/GtS at 5f–10f — Soft routes to GM Soft' },
+    { icon: '⚑', text: '10f GtS: over-predicts ~0.8f (going interaction — monitor)' },
+    { icon: '→', text: '13.99f: use GM (matched by going) + Min SPS correction' },
+  ],
   Ripon: [
     { icon: '⚑', text: 'Good/GtF — GtS/Soft route to GM' },
     { icon: '⚑', text: '9.77f: under-predicts ~0.6f' },
     { icon: '→', text: '12.05f: use GM Good' },
     { icon: '→', text: '16f: use GM Good + Min SPS correction' },
+  ],
+  Thirsk: [
+    { icon: '⚑', text: 'All goings at 5f–7.99f — trained on Good/GtF/GtS (no 12.04f in model)' },
+    { icon: '⚑', text: '7.99f: under-predicts ~0.6f' },
+    { icon: '→', text: '12.04f: use GM (matched by going) + Min SPS correction' },
   ],
   York: [
     { icon: '⚑', text: 'Good/GtF/GtS — Soft routes to GM Soft' },
