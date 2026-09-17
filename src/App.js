@@ -142,7 +142,7 @@ const TRACK_ROUTING = {
   ],
   York: [
     { icon: '⚑', text: 'Good only (5f–11.85f) — GM-based best-performance model' },
-    { icon: '⚑', text: '11.85f: over-predicts ~1.0–1.3f — treat as upper bound or use GM Good' },
+    { icon: '⚑', text: '11.85f: under-predicts ~1.0–1.3f — treat as lower bound or use GM Good' },
     { icon: '→', text: '13.85f+: use GM Good + Min SPS correction' },
     { icon: '→', text: 'GtF: use GM GtF' },
     { icon: '→', text: 'GtS: use GM GtS' },
