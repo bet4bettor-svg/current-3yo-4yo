@@ -20,7 +20,7 @@ const TRACK_MODELS = {
   Wolverhampton:     { b0: 654.912, b1: -352.292, b2: -53.848, b3: 39.556, b4: 20.641, n: 274, r2: 87.18 },
   Lingfield:         { b0: 459.564, b1: -270.563, b2: -28.340, b3: 37.714, b4: 10.598, n: 331, r2: 75.20 },
   Musselburgh:       { b0: 365.7160, b1: -259.9399, b2: -5.2925, b3: 52.5882, n: 137, r2: 90.90 },
-  'Newbury (Straight)': { b0: 33.230, b1: 6.001, b2: -2.984, b3: -3.261, n: 182, r2: 86.03 },
+  'Newbury (Straight)': { b0: 34.875, b1: 4.651, b2: -2.941, b3: -3.032, n: 218, r2: 82.57 },
   'Newcastle (Straight)': { b0: 96.8734, b1: -38.7571, b2: -3.6915, b3: 5.2610, n: 168, r2: 81.39 },
   'Newmarket Rowley': { b0: 97.5249, b1: -26.7433, b2: -4.8786, b3: 1.6839, n: 235, r2: 85.33 },
   Thirsk:            { b0: -6.2032, b1: 28.5311, b2: -1.7549, b3: -7.4873, n: 314, r2: 85.17 },
@@ -119,6 +119,7 @@ const TRACK_ROUTING = {
     { icon: '→', text: '14.10f+: use GM Good (AW caveat — directional)' },
   ],
   'Newbury (Straight)': [
+    { icon: '⚑', text: 'Good (all distances) + GtF (6f, 7f) — GtF 8f routes to GM GtF' },
     { icon: '⚑', text: '5.15f predictions run ~0.35f long' },
     { icon: '→', text: 'Round course races (10f+): use GM instead' },
     { icon: '→', text: 'GtS / Soft: use GM' },
