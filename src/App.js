@@ -6,7 +6,7 @@ const TRACK_MODELS = {
   Doncaster:         { b0: 126.143, b1: -65.711, b2: -3.412, b3: 11.040, n: 260, r2: 76.57 },
   Epsom:             { b0: 126.3296, b1: -68.3779,  b2: -3.4308, b3: 12.2257,  n: 313, r2: 96.99 },
   Goodwood:          { b0: 275.8087, b1: -197.5548, b2: -3.0915, b3: 39.5758, n: 295, r2: 88.12 },
-  York:              { b0: 198.4051, b1: -118.5363, b2: -4.3229, b3: 21.7015, n: 397, r2: 87.97 },
+  York:              { b0: 52.9099, b1: 2.8124, b2: -4.3278, b3: -3.5922, n: 78, r2: 90.99 },
   'Ascot (Straight)': { b0: 97.332, b1: -44.930, b2: -3.194, b3: 7.018,  n: 305, r2: 90.76 },
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
   Haydock:           { b0: 527.5982, b1: -264.3835, b2: -48.0935, b3: 23.0892, b4: 18.9158, n: 227, r2: 87.03 },
@@ -141,8 +141,12 @@ const TRACK_ROUTING = {
     { icon: '→', text: '12.04f: use GM (matched by going) + Min SPS correction' },
   ],
   York: [
-    { icon: '⚑', text: 'Good/GtF/GtS — Soft routes to GM Soft' },
-    { icon: '⚑', text: '13.85f: use GM Good + Min SPS correction' },
+    { icon: '⚑', text: 'Good only (5f–11.85f) — GM-based best-performance model' },
+    { icon: '⚑', text: '11.85f: over-predicts ~1.0–1.3f — treat as upper bound or use GM Good' },
+    { icon: '→', text: '13.85f+: use GM Good + Min SPS correction' },
+    { icon: '→', text: 'GtF: use GM GtF' },
+    { icon: '→', text: 'GtS: use GM GtS' },
+    { icon: '→', text: 'Soft: use GM Soft' },
   ],
   Wolverhampton: [
     { icon: '⚑', text: '12.23f: under-predicts ~0.6f (monitoring)' },
