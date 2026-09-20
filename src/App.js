@@ -28,10 +28,10 @@ const TRACK_MODELS = {
 };
  
 const GENERAL_MODELS = {
-  Good: { b0: 243.8401, b1: -157.3179, b2: -4.2052, b3: 29.7701, b4: null, n: 230, r2: 85.26, label: 'Good' },
-  GtF:  { b0: 194.0662, b1: -114.8222, b2: -4.2434, b3: 20.8401, b4: null, n: 134, r2: 88.85, label: 'Good to Firm' },
-  GtS:  { b0: 245.2961, b1: -157.9634, b2: -3.9298, b3: 29.3874, b4: null, n: 183, r2: 85.85, label: 'Good to Soft' },
-  Soft: { b0: 398.9669, b1: -192.5925, b2: -37.0147, b3: 16.2979, b4: 14.0072, n: 167, r2: 86.55, label: 'Soft' },
+  Good: { b0: 197.4947, b1: -118.5189, b2: -4.3788, b3: 21.8698, b4: null, n: 242, r2: 90.56, label: 'Good' },
+  GtF:  { b0: 156.2330, b1: -85.4553, b2: -3.9603, b3: 14.8036, b4: null, n: 138, r2: 90.19, label: 'Good to Firm' },
+  GtS:  { b0: 162.0559, b1: -90.0609, b2: -3.8737, b3: 15.4974, b4: null, n: 213, r2: 92.03, label: 'Good to Soft' },
+  Soft: { b0: 152.6700, b1: -83.3335, b2: -4.0736, b3: 14.3609, b4: null, n: 165, r2: 91.53, label: 'Soft' },
 };
  
 const TRACK_ROUTING = {
@@ -140,14 +140,6 @@ const TRACK_ROUTING = {
     { icon: '⚑', text: 'All goings at 5f–7.99f — trained on Good/GtF/GtS (no 12.04f in model)' },
     { icon: '⚑', text: '7.99f: under-predicts ~0.6f' },
     { icon: '→', text: '12.04f: use GM (matched by going) + Min SPS correction' },
-  ],
-  York: [
-    { icon: '⚑', text: 'Good only (5f–11.85f) — GM-based best-performance model' },
-    { icon: '⚑', text: '11.85f: under-predicts ~1.0–1.3f — treat as lower bound or use GM Good' },
-    { icon: '→', text: '13.85f+: use GM Good + Min SPS correction' },
-    { icon: '→', text: 'GtF: use GM GtF' },
-    { icon: '→', text: 'GtS: use GM GtS' },
-    { icon: '→', text: 'Soft: use GM Soft' },
   ],
   Wolverhampton: [
     { icon: '⚑', text: '12.23f: under-predicts ~0.6f (monitoring)' },
@@ -297,7 +289,7 @@ const Current3yo4yo = () => {
               )}
  
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>Average SPS (Hz)</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for 13f+)</label>
                 <input
                   type="number"
                   step="0.01"
