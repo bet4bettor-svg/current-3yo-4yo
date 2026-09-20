@@ -151,7 +151,12 @@ const TRACK_ROUTING = {
     { icon: '→', text: '11.45f: use GM Good + Min SPS correction' },
   ],
 };
- 
+   'York (Good)': [
+    { icon: '→', text: '13.85f+: use GM Good (enter min SPS)' },
+  ],
+  'York (Good to Soft)': [
+    { icon: '→', text: '13.85f+: use GM GtS (enter min SPS)' },
+  ],
 const Current3yo4yo = () => {
   const [view, setView] = useState('predict');
   const [track, setTrack] = useState('General');
