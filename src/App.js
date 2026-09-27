@@ -16,7 +16,7 @@ const TRACK_MODELS = {
   Ripon:             { b0: 68.7257, b1: -16.5715, b2: -3.6815, b3: 0.8997, n: 247, r2: 87.35 },
   Sandown:           { b0: 31.6375, b1: 11.0530, b2: -3.1165, b3: -5.0716, n: 207, r2: 69.81 },
   Salisbury:         { b0: 135.0788, b1: -61.3327, b2: -5.0166, b3: 9.4377, n: 259, r2: 81.79 },
-  Southwell:         { b0: 525.2322, b1: -271.7301, b2: -44.7928, b3: 28.6818, b4: 16.8293, n: 201, r2: 91.29 },
+  Southwell:         { b0: 402.3501, b1: -212.7120, b2: -31.0860, b3: 24.4823, b4: 11.4403, n: 105, r2: 94.09, hybridCutoff: 11.99 },
   Windsor:           { b0: 134.1232, b1: -72.1726, b2: -3.3936, b3: 12.3567, n: 196, r2: 83.29 },
   Wolverhampton:     { b0: 654.912, b1: -352.292, b2: -53.848, b3: 39.556, b4: 20.641, n: 274, r2: 87.18 },
   Lingfield:         { b0: 459.564, b1: -270.563, b2: -28.340, b3: 37.714, b4: 10.598, n: 331, r2: 75.20 },
@@ -116,8 +116,9 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Soft / GtS: use GM' },
   ],
   Southwell: [
-    { icon: '⚑', text: '12.06f: directional (+0.6f bias)' },
-    { icon: '→', text: '14.10f+: use GM Good (AW caveat — directional)' },
+    { icon: '⚑', text: 'Best-performance hybrid TM — avg SPS for ≤11.99f, min SPS for 12f+' },
+    { icon: '⚑', text: '11.10f: mild positive bias (+0.65f) — monitor' },
+    { icon: '⚑', text: '16.46f+: apply ~+2.0f marathon correction' },
   ],
   'Newbury (Straight)': [
     { icon: '⚑', text: 'Good (all distances) + GtF (6f, 7f) — GtF 8f routes to GM GtF' },
@@ -294,7 +295,7 @@ const Current3yo4yo = () => {
               )}
  
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for 13f+)</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for {track === 'Southwell' ? '12f+' : '13f+'})</label>
                 <input
                   type="number"
                   step="0.01"
