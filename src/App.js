@@ -63,7 +63,7 @@ const TRACK_ROUTING = {
   ],
   Kempton: [
     { icon: '⚑', text: 'Slow going only — hybrid TM (no data 8–11f or 12–16f)' },
-    { icon: '⚑', text: 'Avg SPS for ≤11.99f, min SPS for 12f+' },
+    { icon: '⚑', text: 'Avg SPS: 6f, 7f, 1m, 1m 2f 219y — Min SPS: 1m 3f 219y, 1m 7f 218y' },
     { icon: '⚑', text: '2m (15.99f): add +0.9f to prediction (provisional, n=7)' },
   ],
   Lingfield: [
