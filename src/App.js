@@ -295,7 +295,7 @@ const Current3yo4yo = () => {
               )}
  
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for {isTrackModel && TRACK_MODELS[track].hybridCutoff ? '12f+' : '13f+'})</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>{isTrackModel ? (TRACK_MODELS[track].hybridCutoff ? 'SPS (avg, or min for 12f+)' : 'Average SPS') : 'SPS (avg, or min for 13f+)'}</label>
                 <input
                   type="number"
                   step="0.01"
