@@ -116,7 +116,7 @@ const TRACK_ROUTING = {
     { icon: '→', text: 'Soft / GtS: use GM' },
   ],
   Southwell: [
-    { icon: '⚑', text: 'Best-performance hybrid TM — avg SPS for ≤11.99f, min SPS for 12f+' },
+    { icon: '⚑', text: 'Avg SPS: 4f 214y, 6f 16y, 7f 14y, 1m 13y, 1m 3f 23y — Min SPS: 1m 4f 14y, 1m 6f 21y, 2m 102y' },
     { icon: '⚑', text: '11.10f: mild positive bias (+0.65f) — monitor' },
     { icon: '⚑', text: '16.46f+: apply ~+2.0f marathon correction' },
   ],
