@@ -11,7 +11,7 @@ const TRACK_MODELS = {
   'Ascot (Straight)': { b0: 97.332, b1: -44.930, b2: -3.194, b3: 7.018,  n: 305, r2: 90.76 },
   Pontefract:        { b0: 182.880, b1: -98.771, b2: -5.021, b3: 16.565,  n: 163, r2: 76.86 },
   Haydock:           { b0: 527.5982, b1: -264.3835, b2: -48.0935, b3: 23.0892, b4: 18.9158, n: 227, r2: 87.03 },
-  Kempton:           { b0: 309.541, b1: -177.949, b2: -8.712, b3: 32.271, n: 407, r2: 80.12 },
+  Kempton:           { b0: 791.8231, b1: -415.4949, b2: -72.3938, b3: 40.2472, b4: 28.9938, n: 79, r2: 93.25, hybridCutoff: 11.99 },
   Redcar:            { b0: 77.6477, b1: -20.5973, b2: -4.0744, b3: 1.6006, n: 224, r2: 94.74 },
   Ripon:             { b0: 68.7257, b1: -16.5715, b2: -3.6815, b3: 0.8997, n: 247, r2: 87.35 },
   Sandown:           { b0: 31.6375, b1: 11.0530, b2: -3.1165, b3: -5.0716, n: 207, r2: 69.81 },
@@ -62,9 +62,9 @@ const TRACK_ROUTING = {
     { icon: '→', text: '13f+: use GM Good + Min SPS correction' },
   ],
   Kempton: [
-    { icon: '⚑', text: 'Slowly run races: treat prediction with caution' },
-    { icon: '→', text: '12f: use GM Good' },
-    { icon: '⚑', text: '16f: track model + Min SPS correction' },
+    { icon: '⚑', text: 'Slow going only — hybrid TM (no data 8–11f or 12–16f)' },
+    { icon: '⚑', text: 'Avg SPS for ≤11.99f, min SPS for 12f+' },
+    { icon: '⚑', text: '2m (15.99f): add +0.9f to prediction (provisional, n=7)' },
   ],
   Lingfield: [
     { icon: '⚑', text: '6f: over-predicts ~0.7f' },
@@ -295,7 +295,7 @@ const Current3yo4yo = () => {
               )}
  
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for {track === 'Southwell' ? '12f+' : '13f+'})</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>SPS (avg, or min for {isTrackModel && TRACK_MODELS[track].hybridCutoff ? '12f+' : '13f+'})</label>
                 <input
                   type="number"
                   step="0.01"
