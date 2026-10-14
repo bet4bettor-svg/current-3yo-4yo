@@ -18,11 +18,11 @@ const TRACK_MODELS = {
   Salisbury:         { b0: 135.0788, b1: -61.3327, b2: -5.0166, b3: 9.4377, n: 259, r2: 81.79 },
   Southwell:         { b0: 402.3501, b1: -212.7120, b2: -31.0860, b3: 24.4823, b4: 11.4403, n: 105, r2: 94.09, hybridCutoff: 11.99 },
   Windsor:           { b0: 134.1232, b1: -72.1726, b2: -3.3936, b3: 12.3567, n: 196, r2: 83.29 },
-  Wolverhampton:     { b0: 654.912, b1: -352.292, b2: -53.848, b3: 39.556, b4: 20.641, n: 274, r2: 87.18 },
+  Wolverhampton:     { b0: 181.5380, b1: -95.7067, b2: -5.7994, b3: 16.6963, n: 89, r2: 91.58, hybridCutoff: 11.99 },
   Lingfield:         { b0: 459.564, b1: -270.563, b2: -28.340, b3: 37.714, b4: 10.598, n: 331, r2: 75.20 },
   Musselburgh:       { b0: 365.7160, b1: -259.9399, b2: -5.2925, b3: 52.5882, n: 137, r2: 90.90 },
   'Newbury (Straight)': { b0: 34.875, b1: 4.651, b2: -2.941, b3: -3.032, n: 218, r2: 82.57 },
-  'Newcastle (Straight)': { b0: 96.8734, b1: -38.7571, b2: -3.6915, b3: 5.2610, n: 168, r2: 81.39 },
+  Newcastle:         { b0: 195.2756, b1: -118.1295, b2: -4.0623, b3: 21.6870, n: 85, r2: 94.46, hybridCutoff: 13 },
   'Newmarket Rowley': { b0: 97.5249, b1: -26.7433, b2: -4.8786, b3: 1.6839, n: 235, r2: 85.33 },
   Thirsk:            { b0: -6.2032, b1: 28.5311, b2: -1.7549, b3: -7.4873, n: 314, r2: 85.17 },
 };
@@ -93,11 +93,12 @@ const TRACK_ROUTING = {
     { icon: '⚑', text: '7.07f: over-predicts ~0.65f' },
     { icon: '→', text: '12.47f+: use GM Good + Min SPS correction' },
   ],
-  'Newcastle (Straight)': [
-    { icon: '⚑', text: 'Straight course model only (5f, 6f, 7.06f, 8.02f)' },
-    { icon: '⚠', text: '10.19f: no reliable prediction — biomechanical signal insufficient' },
-    { icon: '→', text: '12.45f: use GM Good + Min SPS correction' },
-    { icon: '→', text: '16.25f: use GM Good + Min SPS correction' },
+  Newcastle: [
+    { icon: '⚑', text: 'Standard going only — best-performance hybrid TM' },
+    { icon: '⚑', text: 'Avg SPS: 5f to 12.45f — Min SPS: 16.25f (2m)' },
+    { icon: '⚑', text: '10.5–12.5f readings cannot separate 1m2f from 1m4f types; read as a middle-distance range' },
+    { icon: '⚑', text: 'Predictions above 14f: add +0.5f' },
+    { icon: '⚑', text: 'No data 8–10.19f or 12.45–16.25f: interpolated' },
   ],
   'Newmarket Rowley': [
     { icon: '⚑', text: 'Good only — GtF/GtS/Soft route to GM' },
@@ -143,8 +144,10 @@ const TRACK_ROUTING = {
     { icon: '→', text: '12.04f: use GM (matched by going) + Min SPS correction' },
   ],
   Wolverhampton: [
-    { icon: '⚑', text: '12.23f: under-predicts ~0.6f (monitoring)' },
-    { icon: '⚑', text: '14f: track model + Min SPS correction' },
+    { icon: '⚑', text: 'Standard going only' },
+    { icon: '⚑', text: 'Avg SPS: 5f 21y, 6f 20y, 7f 36y, 1m 142y, 1m 1f 104y — Min SPS: 1m 4f 51y, 1m 5f 219y, 2m 120y' },
+    { icon: '⚑', text: 'Readings accurate to about ½f either side' },
+    { icon: '⚑', text: '2m stayers read about 2f short — a 13f+ reading means stayer' },
   ],
   Windsor: [
     { icon: '⚑', text: 'Good/GtF — GtS routes to GM GtS, Soft to GM Soft' },
@@ -295,7 +298,7 @@ const Current3yo4yo = () => {
               )}
  
               <div>
-                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>{isTrackModel ? (TRACK_MODELS[track].hybridCutoff ? 'SPS (avg, or min for 12f+)' : 'Average SPS') : 'SPS (avg, or min for 13f+)'}</label>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#2C3E50', minHeight: '32px' }}>{isTrackModel ? (TRACK_MODELS[track].hybridCutoff ? `SPS (avg, or min for ${Math.ceil(TRACK_MODELS[track].hybridCutoff)}f+)` : 'Average SPS') : 'SPS (avg, or min for 13f+)'}</label>
                 <input
                   type="number"
                   step="0.01"
